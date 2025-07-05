@@ -31,7 +31,7 @@ export default function Header() {
           <Link href="/">
             <Image
               src="/logo.svg"
-              alt="JioCinema Logo"
+              alt="FilVuetv Logo"
               width={136}
               height={36}
               className="md:h-9 md:max-w-[136px] max-w-24"
