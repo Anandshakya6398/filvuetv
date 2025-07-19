@@ -18,7 +18,7 @@ describe("View wishlist", () => {
         // input
         UserModel.findById.mockResolvedValue({
             wishlist: [{ id: "abc" }, { id: "xyz" }],
-            name: "Jasbir"
+            name: "Anand"
         });
 
         await getUserWishlist(req, res);

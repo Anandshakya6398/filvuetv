@@ -18,11 +18,11 @@ async function emailSender(templatePath, recieverEmail, toReplaceObject) {
         const content = await updateTemplateHelper(templatePath, toReplaceObject);
         // thorugh which service you have to send the mail 
         const sendGridDetails = {
-            host: "smtp.sendgrid.net",
-            port: 465,
+            host: process.env.EMAIL_HOSTNAME ,
+            port: process.env.EMAIL_PORT,
             secure: true,
             auth: {
-                user: "apikey",
+                user: process.env.EMAIL_USER,
                 pass: process.env.SENDGRID_API_KEY
             }
         }
@@ -43,11 +43,11 @@ async function emailSender(templatePath, recieverEmail, toReplaceObject) {
 module.exports = emailSender;
 // demo
 // const toReplaceObject = {
-//     name: "Jasbir",
+//     name: "Anand",
 //     otp: "1234"
 // }
 
-//  emailSender("./templates/otp.html", "jasbir.singh19906@gmail.com", toReplaceObject).then(()=>{
+//  emailSender("./templates/otp.html", "anand@gmail.com", toReplaceObject).then(()=>{
 //     console.log("Email is send");
 //  })
 
