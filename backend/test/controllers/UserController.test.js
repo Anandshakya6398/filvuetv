@@ -1,9 +1,9 @@
 // function
 const { getUserWishlist } = require("../../controllers/UserController")
 
-const UserModel = require('../../model/UserModel');
+const UserModel = require('../../Model/UserModel');
 
-jest.mock('../../model/UserModel');
+jest.mock('../../Model/UserModel');
 
 describe("View wishlist", () => {
     it("should show the data", async () => {
