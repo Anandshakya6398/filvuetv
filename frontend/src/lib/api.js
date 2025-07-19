@@ -51,7 +51,7 @@ export const ENDPOINT = {
 
 export const media = (path) => `https://image.tmdb.org/t/p/original` + path;
 
-export const API_BASE_URL = `http://localhost:3001/api`;
+export const API_BASE_URL = `https://backend-1-z4e0.onrender.com`;
 
 export const api = axios.create({
     baseURL: API_BASE_URL,
