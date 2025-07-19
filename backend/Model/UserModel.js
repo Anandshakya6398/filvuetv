@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-
 const wishlistItemSchema = new mongoose.Schema({
     poster_path: { type: String, required: true },
     name: { type: String, required: true },
