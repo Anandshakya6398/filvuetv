@@ -1,0 +1,45 @@
+{
+  "name": "jio_backend",
+  "version": "1.0.0",
+  "main": "api.js",
+  "scripts": {
+    "dev": "NODE_ENV=development nodemon api.js",
+    "test": "NODE_ENV=test jest",
+    "start": "node api.js",
+    "test:watch": "NODE_ENV=test jest  --watch"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "axios": "^1.10.0",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "express-mongo-sanitize": "^2.2.0",
+    "express-rate-limit": "^7.5.0",
+    "helmet": "^8.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "lucide-react": "^0.525.0",
+    "mongoose": "^8.16.3",
+    "morgan": "^1.10.0",
+    "nodemailer": "^6.9.16",
+    "razorpay": "^2.9.5",
+    "sendgrid": "^5.2.3"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^7.0.0"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "coveragePathIgnorePatterns": [
+      "/node_modules/"
+    ],
+    "setupFilesAfterEnv": [
+      "<rootDir>/jest.setup.js"
+    ]
+  }
+}
