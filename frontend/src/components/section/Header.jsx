@@ -12,7 +12,7 @@ export const navLinks = [
   { name: "Movies", key: "movies", href: "/movies" },
   { name: "Tv Shows", key: "tv", href: "/tv" },
   { name: "Watchlist", key: "watchlist", href: "/watchlist" },
-  { name: "Jio+", key: "jio+", href: "/jio+" },
+  { name: "TV+", key: "tvplus", href: "/tvplus" },
 ];
 
 export default function Header() {
@@ -30,9 +30,9 @@ export default function Header() {
         <div className="flex">
           <Link href="/">
             <Image
-              src="/logo.svg"
+              src="/logo.png"
               alt="Filvuetv Logo"
-              width={136}
+              width={36}
               height={36}
               className="md:h-9 md:max-w-[136px] max-w-24"
             />
@@ -64,14 +64,14 @@ export default function Header() {
         </nav>
 
         <div className="flex items-center justify-end w-full">
-          <div className="rounded-3xl border lg:flex justify-center items-center px-4 gap-2 hidden">
+          {/* <div className="rounded-3xl border lg:flex justify-center items-center px-4 gap-2 hidden">
             <Image src="/search.svg" alt="search icon" height={20} width={20} />
             <input
               type="text"
               placeholder="Search..."
               className=" py-2 bg-transparent  text-white font-medium focus:outline-none text-sm max-w-[150px]"
             />
-          </div>
+          </div> */}
           <ProfileSheet />
         </div>
       </div>

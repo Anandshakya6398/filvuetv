@@ -1,6 +1,6 @@
 import BannerSection from "@/components/section/BannerSection";
 import CategoriesSection from "@/components/section/CategoriesSection";
-import JumperSection from "@/components/section/jumper";
+import JumperSection from "@/components/section/Jumper";
 import { api, ENDPOINT } from "@/lib/api";
 
 export default function Home() {

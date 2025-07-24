@@ -26,9 +26,19 @@ app.use(cookieParser());
 app.use(morgan("dev"));
 app.use(mongoSanatize());
 app.use(helmet());
+
+if (process.env.NODE_ENV !== "test") {
+  app.use(morgan("dev")); //logger for debugging
+}
+// allowing frontend to access the api
+
+const allowedOrigins = process.env.ALLOWED_ORIGINS.split(",");
+
 const corsConfig = {
-    origin: true,
-    credentials: true,
+  origin: allowedOrigins, // Use the actual array instead of true
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
 };
 app.use(cors(corsConfig));
 app.options("*", cors(corsConfig));
@@ -43,7 +53,7 @@ const VideoRouter = require("./Routers/VideoRouter");
 const PaymentRouter = require("./Routers/PaymentRouter");
 
 // Router middleware
-app.use("/api/auth", AuthRouter);
+app.use("/api/auth/", AuthRouter);
 app.use("/api/movies", MovieRouter);
 app.use("/api/tv", TvShowsRouter);
 app.use("/api/discover", DiscoverRouter);

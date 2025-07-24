@@ -16,7 +16,7 @@ export const ENDPOINT = {
     discoverTopRated: "/discover/top_rated",
     discoverUpcoming: "/discover/upcoming",
     // movies
-    fetchActionMovies: `/movies/action`,
+    // fetchActionMovies: `/movies/action`,
     fetchComedyMovies: `/movies/comedy`,
     fetchHorrorMovies: `/movies/horror`,
     fetchRomanceMovies: `/movies/romance`,

@@ -1,4 +1,4 @@
-const UserModel = require("../model/UserModel");
+const UserModel = require("../Model/UserModel");
 const emailSender = require("../utility/DynamicEmailSender");
 const jwt = require("jsonwebtoken");
 const promisify = require("util").promisify;
@@ -50,7 +50,7 @@ async function forgetPasswordHandler(req, res) {
             message: "otp is send successfully",
             status: "success",
             otp: otp,
-            resetURL: `http:localhost:3000/api/auth/resetPassword/${user["_id"]}`
+            resetURL: `http://localhost:3000/api/auth/resetPassword/${user["_id"]}`
         })
         const templateData = { name: user.name, otp: user.otp }
         await emailSender("./templates/otp.html", user.email, templateData);
@@ -179,53 +179,50 @@ async function signupHandler(req, res) {
     }
 }
 async function loginHandler(req, res) {
-    // email,password -> if exist -> allow login 
-    //  cookies -> JWT -> they will bring back the token -> protected Route
     try {
-
         const { email, password } = req.body;
         const user = await UserModel.findOne({ email });
+
         if (!user) {
             return res.status(404).json({
                 message: "Invalid email or password",
                 status: "failure"
-            })
+            });
         }
-        // hash the password   
-        console.log(password,user.password)
+
         const areEqual = password == user.password;
         if (!areEqual) {
             return res.status(400).json({
                 message: "Invalid email or password",
                 status: "failure"
-            })
+            });
         }
 
-        // token create
         const authToken = await promisifiedJWTSign({ id: user["_id"] }, process.env.JWT_SECRET_KEY);
-        // // token -> cookies
+
+        // 👇 This is the correct cookie config:
+        const isProduction = process.env.NODE_ENV === "production";
         res.cookie("jwt", authToken, {
             maxAge: 1000 * 60 * 60 * 24,
-            secure:true,
-            httpOnly: true, // it can only be accessed by the server
-        })
-        // // res send 
+            httpOnly: true,
+            secure: isProduction,
+            sameSite: isProduction ? "None" : "Lax"
+        });
+
         res.status(200).json({
             message: "login successfully",
             status: "success",
             user: user
-        })
-
-
-
+        });
     } catch (err) {
         console.log("err", err);
         res.status(500).json({
             message: err.message,
             status: "failure"
-        })
+        });
     }
 }
+
 
 const otpGenerator = function () {
     return Math.floor(100000 + Math.random() * 900000);
@@ -252,12 +249,12 @@ const protectRouteMiddleWare = async function (req, res, next) {
     }
 };
 const logoutController = function (req, res) {
-    res.cookie("jwt", "", {
-        // how much time
-        maxAge:0,
-        httpOnly: true,
-        secure: true,
-    });
+    res.clearCookie("jwt", {
+    httpOnly: true,
+    secure: true,
+    sameSite: "None", // Change to "Strict" if frontend and backend are on same origin
+    path: "/",
+  });
 
     res.status(200).json({
         status: "success",
@@ -273,3 +270,252 @@ module.exports = {
     protectRouteMiddleWare,
 
 }
+
+
+
+
+
+
+
+
+// const UserModel = require("../Model/UserModel");
+// const emailSender = require("../utility/DynamicEmailSender");
+// const jwt = require("jsonwebtoken");
+// const promisify = require("util").promisify;
+// const promisifiedJWTSign = promisify(jwt.sign);
+// const promisifiedJWTVerify = promisify(jwt.verify);
+// const { JWT_SECRET_KEY } = process.env;
+
+// // Utility
+// const otpGenerator = () => Math.floor(100000 + Math.random() * 900000);
+
+// // Signup
+// async function signupHandler(req, res) {
+//     try {
+//         const userObject = req.body;
+//         if (!userObject.email || !userObject.password) {
+//             return res.status(400).json({
+//                 message: "required data missing",
+//                 status: "failure"
+//             });
+//         }
+
+//         const user = await UserModel.findOne({ email: userObject.email });
+//         if (user) {
+//             return res.status(400).json({
+//                 message: "user is already signed up",
+//                 status: "failure"
+//             });
+//         }
+
+//         const newUser = await UserModel.create(userObject);
+
+//         res.status(201).json({
+//             message: "user signup successfully",
+//             user: newUser,
+//             status: "success"
+//         });
+//     } catch (err) {
+//         console.log("err", err);
+//         res.status(500).json({
+//             message: err.message,
+//             status: "failure"
+//         });
+//     }
+// }
+
+// // Login
+// async function loginHandler(req, res) {
+//     try {
+//         const { email, password } = req.body;
+//         const user = await UserModel.findOne({ email });
+
+//         if (!user || password !== user.password) {
+//             return res.status(400).json({
+//                 message: "Invalid email or password",
+//                 status: "failure"
+//             });
+//         }
+
+//         const authToken = await promisifiedJWTSign({ id: user["_id"] }, JWT_SECRET_KEY);
+//         res.cookie("jwt", authToken, {
+//             maxAge: 1000 * 60 * 60 * 24,
+//             secure: true,
+//             httpOnly: true,
+//         });
+
+//         res.status(200).json({
+//             message: "login successfully",
+//             status: "success",
+//             user: user
+//         });
+
+//     } catch (err) {
+//         console.log("err", err);
+//         res.status(500).json({
+//             message: err.message,
+//             status: "failure"
+//         });
+//     }
+// }
+
+// // Forget Password
+// async function forgetPasswordHandler(req, res) {
+//     try {
+//         if (!req.body.email) {
+//             return res.status(401).json({
+//                 status: "failure",
+//                 message: "Please enter the email for forget Password"
+//             });
+//         }
+
+//         const user = await UserModel.findOne({ email: req.body.email });
+//         if (!user) {
+//             return res.status(404).json({
+//                 status: "failure",
+//                 message: "user not found for this email"
+//             });
+//         }
+
+//         const otp = otpGenerator();
+//         user.otp = otp;
+//         user.otpExpiry = Date.now() + 1000 * 60 * 10;
+
+//         await user.save({ validateBeforeSave: false });
+
+//         const templateData = { name: user.name, otp: user.otp };
+//         await emailSender("./templates/otp.html", user.email, templateData);
+
+//         res.status(200).json({
+//             message: "otp is send successfully",
+//             status: "success",
+//             otp: otp,
+//             resetURL: `http://localhost:3000/api/auth/resetPassword/${user["_id"]}`
+//         });
+
+//     } catch (err) {
+//         console.log("err", err);
+//         res.status(500).json({
+//             message: err.message,
+//             status: "failure"
+//         });
+//     }
+// }
+
+// // Reset Password
+// async function resetPasswordHandler(req, res) {
+//     try {
+//         let resetDetails = req.body;
+
+//         if (!resetDetails.password || !resetDetails.confirmPassword || !resetDetails.otp || resetDetails.password !== resetDetails.confirmPassword) {
+//             return res.status(401).json({
+//                 status: "failure",
+//                 message: "invalid request"
+//             });
+//         }
+
+//         const user = await UserModel.findOne({ email: req.body.email });
+//         if (!user) {
+//             return res.status(404).json({
+//                 status: "failure",
+//                 message: "user not found"
+//             });
+//         }
+
+//         if (!user.otp || Date.now() > user.otpExpiry || user.otp !== resetDetails.otp) {
+//             return res.status(401).json({
+//                 status: "failure",
+//                 message: "otp expired or incorrect"
+//             });
+//         }
+
+//         user.password = resetDetails.password;
+//         user.confirmPassword = resetDetails.confirmPassword;
+//         user.otp = undefined;
+//         user.otpExpiry = undefined;
+//         await user.save();
+
+//         res.status(200).json({
+//             status: "success",
+//             message: "password reset successfully"
+//         });
+
+//     } catch (err) {
+//         console.log("err", err);
+//         res.status(500).json({
+//             message: err.message,
+//             status: "failure"
+//         });
+//     }
+// }
+
+// // Logout
+// function logoutController(req, res) {
+//     res.cookie("jwt", "", {
+//         maxAge: 0,
+//         httpOnly: true,
+//         secure: true,
+//     });
+
+//     res.status(200).json({
+//         status: "success",
+//         message: "user logged out"
+//     });
+// }
+
+// // Middleware: Protect Route
+// const protectRouteMiddleWare = async function (req, res, next) {
+//     try {
+//         let jwttoken = req.cookies.jwt;
+//         if (!jwttoken) throw new Error("UnAuthorized!");
+
+//         let decryptedToken = await promisifiedJWTVerify(jwttoken, JWT_SECRET_KEY);
+
+//         if (decryptedToken) {
+//             let userId = decryptedToken.id;
+//             req.userId = userId;
+//             console.log("authenticated");
+//             next();
+//         }
+//     } catch (err) {
+//         res.status(500).json({
+//             message: err.message,
+//             status: "failure",
+//         });
+//     }
+// };
+
+// // Get Current User
+// const getCurrentUserController = async (req, res) => {
+//     try {
+//         const userId = req.userId;
+//         const user = await UserModel.findById(userId);
+//         if (!user) {
+//             return res.status(404).json({
+//                 message: "User not found",
+//                 status: "failure"
+//             });
+//         }
+//         res.status(200).json({
+//             message: "User retrieved successfully",
+//             status: "success",
+//             user: user
+//         });
+//     } catch (err) {
+//         console.error(err);
+//         res.status(500).json({
+//             message: err.message,
+//             status: "failure"
+//         });
+//     }
+// };
+
+// module.exports = {
+//     forgetPasswordHandler,
+//     resetPasswordHandler,
+//     signupHandler,
+//     loginHandler,
+//     logoutController,
+//     protectRouteMiddleWare,
+//     getCurrentUserController,
+// };

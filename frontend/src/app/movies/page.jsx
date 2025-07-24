@@ -7,33 +7,33 @@ import { api, ENDPOINT } from "@/lib/api";
 export default function Home() {
     const list = [
         {
-            label: "Top Comedy Movies",
+            label: "Comedy Movies",
             href: "comedy",
             fetcher: async () => {
                 return (await api.get(ENDPOINT.fetchComedyMovies)).data.response?.results;
             },
         },
         {
-            label: "Top Horror Movies",
+            label: "Horror Movies",
             href: "horror",
             fetcher: async () => {
                 return (await api.get(ENDPOINT.fetchHorrorMovies)).data.response?.results;
             },
         },
         {
-            label: "Top Romance Movies",
+            label: "Romance Movies",
             href: "romance",
             fetcher: async () => {
                 return (await api.get(ENDPOINT.fetchRomanceMovies)).data.response?.results;
             },
         },
-        {
-            label: "Top Action Movies",
-            href: "action",
-            fetcher: async () => {
-                return (await api.get(ENDPOINT.fetchActionMovies)).data.data?.results;
-            },
-        },
+        // {
+        //     label: "Top Action Movies",
+        //     href: "action",
+        //     fetcher: async () => {
+        //         return (await api.get(ENDPOINT.fetchActionMovies)).data.data?.results;
+        //     },
+        // },
     ];
     const getMoviesBannerData = async () => {
         return (await api.get(ENDPOINT.fetchAnimeMovies)).data?.response?.results;

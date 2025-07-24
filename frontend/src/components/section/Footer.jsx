@@ -29,21 +29,21 @@ const downloadAppLinks = [
 ];
 
 const connectWithUsLinks = [
-    {
-        icon: "facebook.svg",
-        href: "#",
-    },
+    // {
+    //     icon: "facebook.svg",
+    //     href: "https://www.facebook.com",
+    // },
     {
         icon: "x.svg",
-        href: "#",
+        href: "https://www.x.com",
     },
     {
         icon: "instagram.svg",
-        href: "#",
+        href: "https://www.instagram.com",
     },
     {
         icon: "youtube.svg",
-        href: "#",
+        href: "https://www.youtube.com",
     },
 ];
 
@@ -109,15 +109,15 @@ export default function Footer() {
 
                 <div className="md:text-center text-start mt-8 flex w-full justify-between items-center bg-[#202123] py-4 px-4">
                     <p className="md:text-sm text-xs">
-                        Copyright © 2024 Viacom18 Media PVT LTD. All rights reserved.
+                        Copyright © 2025. All rights reserved by Anand Shakya.
                     </p>
-                    <Image
+                    {/* <Image
                         src="/jio-logo.png"
                         alt="Jio Logo"
                         width={48}
                         height={48}
                         className="md:h-12 md:w-12 h-10 w-10"
-                    />
+                    /> */}
                 </div>
             </div>
         </footer>
