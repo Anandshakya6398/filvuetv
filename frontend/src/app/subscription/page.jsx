@@ -59,7 +59,7 @@ function Subscription() {
                 amount: activePrice
             })
             const options = {
-                key: process.env.NEXT_PUBLIC_KEY_ID ?? "rzp_test_cvU2jLcjggJY51",
+                key: process.env.NEXT_PUBLIC_KEY_ID ?? "",
                 amount: res.data.amount,
                 currency: "INR",
                 name: "FilVuetv Corp",
